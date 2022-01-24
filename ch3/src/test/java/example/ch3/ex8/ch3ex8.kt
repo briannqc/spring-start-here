@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 
 class Parrot(val name: String)
 
@@ -51,6 +52,26 @@ open class ProjectConfigCase2 {
 }
 
 
+@Configuration
+open class ProjectConfigCase3 {
+
+    @Bean
+    open fun parrot1(): Parrot {
+        return Parrot("Koko")
+    }
+
+    @Bean
+    @Primary
+    open fun parrot2(): Parrot {
+        return Parrot("Miki")
+    }
+
+    @Bean
+    open fun person(parrot: Parrot): Person {
+        return Person(parrot)
+    }
+}
+
 class Ch3Ex8Test {
 
     @Test
@@ -81,5 +102,20 @@ class Ch3Ex8Test {
         val person = context.getBean(Person::class.java)
 
         assertThat(person.parrot.name).isEqualTo("Koko")
+    }
+
+    @Test
+    @DisplayName(
+        """
+        GIVEN there are multiple parrot beans in the context
+        AND one is annotated @Primary
+        THEN the primary bean is used
+    """
+    )
+    fun `using @Primary`() {
+        val context = AnnotationConfigApplicationContext(ProjectConfigCase3::class.java)
+        val person = context.getBean(Person::class.java)
+
+        assertThat(person.parrot.name).isEqualTo("Miki")
     }
 }
