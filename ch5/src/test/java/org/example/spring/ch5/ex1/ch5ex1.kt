@@ -15,6 +15,11 @@ open class ProjectConfig {
     open fun dog(): Dog {
         return Dog()
     }
+
+    @Bean
+    open fun dog2(): Dog {
+        return Dog()
+    }
 }
 
 class SpringTest {
@@ -26,5 +31,16 @@ class SpringTest {
         val dog2 = context.getBean("dog", Dog::class.java)
 
         assertThat(dog1).isEqualTo(dog2)
+    }
+
+    @Test
+    fun `unlike singleton pattern, singleton scope in Spring is per bean name, not per bean type`() {
+        val context = AnnotationConfigApplicationContext(ProjectConfig::class.java)
+        val dog1 = context.getBean("dog")
+        val dog2 = context.getBean("dog2")
+
+        assertThat(dog1).isExactlyInstanceOf(Dog::class.java)
+        assertThat(dog2).isExactlyInstanceOf(Dog::class.java)
+        assertThat(dog1).isNotEqualTo(dog2)
     }
 }
