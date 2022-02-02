@@ -1,4 +1,4 @@
-package ch6ex1.comment;
+package ch6.ex1.comment;
 
 import org.springframework.stereotype.Service;
 

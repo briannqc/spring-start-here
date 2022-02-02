@@ -1,7 +1,7 @@
-package ch6ex1;
+package ch6.ex1;
 
-import ch6ex1.comment.Comment;
-import ch6ex1.comment.CommentService;
+import ch6.ex1.comment.Comment;
+import ch6.ex1.comment.CommentService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
