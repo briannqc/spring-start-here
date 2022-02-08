@@ -1,0 +1,1 @@
+Controller works with non-html files too
