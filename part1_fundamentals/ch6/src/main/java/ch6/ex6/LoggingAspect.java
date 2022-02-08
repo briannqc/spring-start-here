@@ -15,7 +15,7 @@ public class LoggingAspect {
 
     private static final Logger logger = Logger.getLogger(LoggingAspect.class.getName());
 
-    @Around("@annotation(ToLog)")
+    @Around("@annotation(ch6.ex6.ToLog)")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.info("BEFORE method " + joinPoint.getSignature());
         var result = joinPoint.proceed();

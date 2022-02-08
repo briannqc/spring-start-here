@@ -15,7 +15,7 @@ public class SecurityAspect {
 
     private static final Logger logger = Logger.getLogger(SecurityAspect.class.getName());
 
-    @Around("@annotation(Secured)")
+    @Around("@annotation(ch6.ex6.Secured)")
     public Object secure(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.info("BEFORE: Securing method: " + joinPoint);
         var result = joinPoint.proceed();

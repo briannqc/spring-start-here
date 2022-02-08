@@ -15,7 +15,7 @@ public class LoggingAspect {
 
     private static final Logger logger = Logger.getLogger(LoggingAspect.class.getName());
 
-    @Around("@annotation(ToLog)")
+    @Around("@annotation(ch6.ex4.aspect.ToLog)")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.info("BEFORE " + joinPoint.getSignature());
         Object result = joinPoint.proceed();
