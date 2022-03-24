@@ -4,11 +4,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Controller
+import org.springframework.stereotype.Service
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.context.annotation.RequestScope
+import org.springframework.web.context.annotation.SessionScope
 
 @SpringBootApplication
 class Ch09Application
@@ -39,23 +41,60 @@ class LoginController(
 
         val loggedIn = loginProcessor.login()
         if (loggedIn) {
-            model.addAttribute("message", "You are logged in!")
-        } else {
-            model.addAttribute("message", "Login failed!")
+            return "redirect:/main"
         }
+
+        model.addAttribute("message", "Login failed!")
         return "login.html"
+    }
+}
+
+@Controller
+class MainController(
+    private val loggedUserManagementService: LoggedUserManagementService
+) {
+
+    @GetMapping("/main")
+    fun home(
+        @RequestParam(required = false) logout: String?,
+        model: Model,
+    ): String {
+        println(loggedUserManagementService)
+        if (logout != null) {
+            this.loggedUserManagementService.username = ""
+        }
+
+        val username = this.loggedUserManagementService.username
+        if (username == "") {
+            return "redirect:/"
+        }
+        model.addAttribute("username", username)
+        return "welcome.html"
     }
 }
 
 @Component
 @RequestScope
-class LoginProcessor {
+class LoginProcessor(
+    private val loggedUserManagementService: LoggedUserManagementService
+) {
 
     lateinit var username: String
 
     lateinit var password: String
 
     fun login(): Boolean {
-        return "nataline" == this.username && "password" == this.password
+        val loggedIn = "nataline" == this.username && "password" == this.password
+        if (loggedIn) {
+            this.loggedUserManagementService.username = username
+        }
+        return loggedIn
     }
+}
+
+@Service
+@SessionScope
+class LoggedUserManagementService {
+
+    var username: String = ""
 }
