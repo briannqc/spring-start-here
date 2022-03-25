@@ -2,6 +2,8 @@ package com.example.ch10
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -52,5 +54,15 @@ class CountryController {
             Country("Vietnam", 90),
             Country("Singapore", 6)
         )
+    }
+
+    @GetMapping("vietnam")
+    fun vietnam(): ResponseEntity<Country> {
+        val vn = Country("Vietnam", 90)
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .header("continent", "Asia")
+            .header("capital", "Hanoi")
+            .body(vn)
     }
 }
