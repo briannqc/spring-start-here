@@ -32,3 +32,25 @@ class HelloControllerV2 {
         return "Hello v2 with @RestController!"
     }
 }
+
+data class Country(
+    val name: String,
+    val population: Int,
+)
+
+@RestController
+class CountryController {
+
+    @GetMapping("/france")
+    fun france(): Country {
+        return Country("France", 67)
+    }
+
+    @GetMapping("/asia")
+    fun asia(): List<Country> {
+        return listOf(
+            Country("Vietnam", 90),
+            Country("Singapore", 6)
+        )
+    }
+}
