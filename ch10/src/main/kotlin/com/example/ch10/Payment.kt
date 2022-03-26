@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
@@ -71,5 +72,16 @@ class ExceptionControllerAdvice {
     fun exceptionNotEnoughMoneyHandler(): ResponseEntity<ErrorDetails> {
         val errDetails = ErrorDetails("Not enough money to make the payment.")
         return ResponseEntity.badRequest().body(errDetails)
+    }
+}
+
+@RestController
+class PaymentEchoController {
+
+    @PostMapping("/v1/payment-echo")
+    fun echoPayment(
+        @RequestBody paymentDetails: PaymentDetails
+    ): ResponseEntity<PaymentDetails> {
+        return ResponseEntity.ok(paymentDetails)
     }
 }
