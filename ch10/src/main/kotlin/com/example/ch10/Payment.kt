@@ -2,8 +2,10 @@ package com.example.ch10
 
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.RestControllerAdvice
 
 data class PaymentDetails(
     val amount: Long
@@ -43,5 +45,31 @@ class PaymentController(
             val errDetails = ErrorDetails("Not enough money to make the payment")
             ResponseEntity.badRequest().body(errDetails)
         }
+    }
+}
+
+/**
+ * PaymentControllerV2 doesn't treat the exception case, instead it delegates such
+ * concerns to @RestControllerAdvice.
+ */
+@RestController
+class PaymentControllerV2(
+    private val paymentService: PaymentService
+) {
+
+    @PostMapping("/v2/payment")
+    fun makePaymentV2(): ResponseEntity<PaymentDetails> {
+        val paymentDetails = this.paymentService.processPayment()
+        return ResponseEntity.accepted().body(paymentDetails)
+    }
+}
+
+@RestControllerAdvice
+class ExceptionControllerAdvice {
+
+    @ExceptionHandler(NotEnoughMoneyException::class)
+    fun exceptionNotEnoughMoneyHandler(): ResponseEntity<ErrorDetails> {
+        val errDetails = ErrorDetails("Not enough money to make the payment.")
+        return ResponseEntity.badRequest().body(errDetails)
     }
 }
