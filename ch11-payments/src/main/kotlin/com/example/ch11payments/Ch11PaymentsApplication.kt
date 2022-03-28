@@ -30,6 +30,7 @@ class PaymentController {
         @RequestHeader requestId: String,
         @RequestBody payment: Payment,
     ): ResponseEntity<Payment> {
+        println("Got: $requestId")
         val p = Payment(UUID.randomUUID().toString(), payment.amount)
 
         return ResponseEntity
